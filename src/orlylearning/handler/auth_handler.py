@@ -94,7 +94,7 @@ class AuthHandler(AbstractHandler):
         if not password_check_response['valid']:
             raise PasswordError(password_check_response['msg'])
 
-        register_post_response = self.session.post(
+        self.session.post(
             AuthHandler.LEARNING_REGISTER,
             data={
                 'next': '',
@@ -107,12 +107,10 @@ class AuthHandler(AbstractHandler):
                 'email': fields['email'],
                 'password1': fields['password'],
                 'country': fields['country'],
-                'referrer': fields['referrer'],
+                'referrer': fields.get('referrer', ''),
                 'recently_viewed_bits': '[]'
             }
         )
-
-        self.__handle_broken_cookies(register_post_response)
 
         return self.session
 

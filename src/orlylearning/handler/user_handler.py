@@ -1,6 +1,7 @@
 from http import HTTPStatus
 import json
 import re
+from typing import Optional
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, SoupStrainer
@@ -19,7 +20,7 @@ class UserHandler(AbstractHandler):
         r'window\.initialStoreData = (.+?);', re.S
     )
 
-    def get_info(self) -> dict:
+    def get_info(self) -> Optional[dict]:
         self._check_session()
 
         response = self.session.get(

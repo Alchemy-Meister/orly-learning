@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Iterator
+from typing import Iterator, Sequence
 from urllib.parse import urljoin
 
 from ..constants.urls import Url
@@ -21,7 +21,7 @@ class BookHandler(AbstractHandler):
 
         return response.json()
 
-    def get_chapters_info(self, book_id: int):
+    def get_chapters_info(self, book_id: int) -> Sequence[dict]:
         self._check_session()
 
         return [

@@ -7,9 +7,9 @@ from requests import Session
 from orlylearning.exceptions import InvalidSession
 from orlylearning.handler import AuthHandler
 
-@fixture(name='invalid_session_auth', params=[None, Session()])
+@fixture(name='invalid_session_auth')
 def init_invalid_auth(request):
-    return AuthHandler(request.param, None)
+    return AuthHandler(None, None)
 
 @fixture(name='auth')
 def init_auth():

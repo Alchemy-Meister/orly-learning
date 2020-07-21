@@ -1,10 +1,17 @@
+from typing import Optional, Sequence
+
 from requests import Session
 
+from .typing.auth import RegistrationFields
 from .handler import AuthHandler, BookHandler, UserHandler
 
 class ORlyLearningClient():
 
-    def __init__(self, session: Session = None, proxy: dict = None):
+    def __init__(
+            self,
+            session: Optional[Session] = None,
+            proxy: Optional[dict] = None
+    ):
         self.proxy = proxy
 
         self.auth_handler = AuthHandler(session, proxy)
@@ -17,22 +24,24 @@ class ORlyLearningClient():
     def logout(self):
         self.set_session(self.auth_handler.logout(), set_proxy=False)
 
-    def register(self, fields: dict) -> dict:
+    def register(self, registration_fields: RegistrationFields):
         self.set_session(
-            self.auth_handler.register(fields), set_proxy=False
+            self.auth_handler.register(registration_fields), set_proxy=False
         )
 
-    def get_user_info(self) -> dict:
+    def get_user_info(self) -> Optional[dict]:
         return self.user_handler.get_info()
 
     def get_book_info(self, book_id: int) -> dict:
         return self.book_handler.get_info(book_id)
 
-    def get_book_chapters_info(self, book_id: int) -> dict:
+    def get_book_chapters_info(self, book_id: int) -> Sequence[dict]:
         return self.book_handler.get_chapters_info(book_id)
 
-    def set_session(self, session: Session, set_proxy: bool = True):
-        if session and set_proxy:
+    def set_session(
+            self, session: Optional[Session], set_proxy: bool = True
+    ):
+        if session and set_proxy and self.proxy:
             session.proxies = self.proxy
 
         self.auth_handler.session = session

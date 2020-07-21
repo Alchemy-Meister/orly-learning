@@ -19,7 +19,6 @@ def init_response(logged_headers):
                 'valid' in request_body.get('email', '')
                 and 'valid' in request_body.get('password', '')
         ):
-
             return (HTTPStatus.OK.value, logged_headers, '')
 
         return (HTTPStatus.BAD_REQUEST, {}, '')

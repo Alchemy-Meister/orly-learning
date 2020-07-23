@@ -12,7 +12,7 @@ class BookHandler(AbstractHandler):
     LEARNING_BOOK = urljoin(Url.LEARNING, '/api/v1/book/{}/')
     LEARNING_BOOK_CHAPTER = urljoin(LEARNING_BOOK, 'chapter/')
 
-    def get_info(self, book_id: int):
+    def get_info(self, book_id: str):
         self._check_session()
 
         response = self.session.get(BookHandler.LEARNING_BOOK.format(book_id))
@@ -21,7 +21,7 @@ class BookHandler(AbstractHandler):
 
         return response.json()
 
-    def get_chapters_info(self, book_id: int) -> Sequence[dict]:
+    def get_chapters_info(self, book_id: str) -> Sequence[dict]:
         self._check_session()
 
         return [

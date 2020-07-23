@@ -32,10 +32,10 @@ class ORlyLearningClient():
     def get_user_info(self) -> Optional[dict]:
         return self.user_handler.get_info()
 
-    def get_book_info(self, book_id: int) -> dict:
+    def get_book_info(self, book_id: str) -> dict:
         return self.book_handler.get_info(book_id)
 
-    def get_book_chapters_info(self, book_id: int) -> Sequence[dict]:
+    def get_book_chapters_info(self, book_id: str) -> Sequence[dict]:
         return self.book_handler.get_chapters_info(book_id)
 
     def set_session(

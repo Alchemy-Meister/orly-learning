@@ -21,12 +21,13 @@ setup(
     version='0.1.0',
     url='https://github.com/Alchemy-Meister/orly-learning',
     author='Alchemy-Meister',
-    license='MIT',
+    license='GPLv3+',
     description="Unofficial O'Reilly Learning API for Python 3",
     keywords="O'Reilly, O'Reilly Learning, Safari, Unoficial API",
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: '
+        'GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 3.8',
         'Intended Audience :: Developers',
         "Operating System :: OS Independent"

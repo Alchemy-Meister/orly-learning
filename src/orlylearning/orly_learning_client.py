@@ -12,46 +12,48 @@ class ORlyLearningClient():
             session: Optional[Session] = None,
             proxy: Optional[dict] = None
     ):
-        self.proxy = proxy
+        self._handlers = {
+            'auth': AuthHandler(session),
+            'book': BookHandler(session),
+            'user': UserHandler(session)
+        }
 
-        self.auth_handler = AuthHandler(session, proxy)
-        self.book_handler = BookHandler(session)
-        self.user_handler = UserHandler(session)
+        self.set_proxy(proxy)
 
     def login(self, email: str, password: str):
-        self.set_session(self.auth_handler.login(email, password))
+        self._set_session(self._handlers['auth'].login(email, password))
 
     def logout(self):
-        self.set_session(self.auth_handler.logout(), set_proxy=False)
+        self._set_session(self._handlers['auth'].logout())
 
     def register(self, registration_fields: RegistrationFields):
-        self.set_session(
-            self.auth_handler.register(registration_fields), set_proxy=False
-        )
+        self._set_session(self._handlers['auth'].register(registration_fields))
 
     def get_user_info(self) -> Optional[dict]:
-        return self.user_handler.get_info()
+        return self._handlers['user'].get_info()
 
     def get_book_info(self, book_id: str) -> dict:
-        return self.book_handler.get_info(book_id)
+        return self._handlers['book'].get_info(book_id)
 
     def get_book_chapters_info(self, book_id: str) -> Sequence[dict]:
-        return self.book_handler.get_chapters_info(book_id)
+        return self._handlers['book'].get_chapters_info(book_id)
 
     def set_session(
             self, session: Optional[Session], set_proxy: bool = True
     ):
-        if session and set_proxy and self.proxy:
-            session.proxies = self.proxy
+        if session and set_proxy:
+            session.proxies = self._handlers['auth'].proxy
 
-        self.auth_handler.session = session
-        self.book_handler.session = session
-        self.user_handler.session = session
+        self._set_session(session)
 
-    def set_proxy(self, proxy: dict):
-        self.proxy = proxy
+    def set_proxy(self, proxy: Optional[dict] = None):
+        if proxy is None:
+            proxy = {}
 
-        self.auth_handler.proxy = self.proxy
-        self.auth_handler.session.proxies = self.proxy
-        self.book_handler.session.proxies = self.proxy
-        self.user_handler.session.proxies = self.proxy
+        for handler in self._handlers.values():
+            handler.set_proxy(proxy)
+
+    def _set_session(self, session: Optional[Session], set_auth: bool = False):
+        for handler_id, handler in self._handlers.items():
+            if handler_id != 'auth' or set_auth:
+                handler.session = session

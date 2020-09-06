@@ -29,7 +29,9 @@ class AuthHandler(AbstractHandler):
 
     __REGISTRATION_FIELDS = ('first_name', 'last_name', 'email', 'password')
 
-    def __init__(self, session: Optional[Session], proxy: Optional[dict]):
+    def __init__(
+            self, session: Optional[Session], proxy: Optional[dict] = None
+    ):
         super().__init__(session)
         self.proxy = proxy
 
@@ -127,6 +129,10 @@ class AuthHandler(AbstractHandler):
         )
 
         return self.session
+
+    def set_proxy(self, proxy: dict):
+        super().set_proxy(proxy)
+        self.proxy = proxy
 
     def __handle_broken_cookies(self, response: Response):
         for cookie in response.raw.headers.getlist('Set-Cookie'):

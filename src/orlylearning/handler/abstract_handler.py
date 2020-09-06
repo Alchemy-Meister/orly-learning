@@ -12,3 +12,7 @@ class AbstractHandler(ABC):
     def _check_session(self):
         if not self.session:
             raise InvalidSession()
+
+    def set_proxy(self, proxy: dict):
+        if self.session:
+            self.session.proxies = proxy

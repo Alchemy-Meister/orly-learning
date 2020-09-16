@@ -4,7 +4,7 @@ import json
 import pytest
 import responses
 
-from orlylearning.exceptions import InvalidCredentials
+from orlylearning.errors import InvalidCredentialsError
 from orlylearning.handler import AuthHandler
 
 @pytest.fixture(name='auth')
@@ -39,5 +39,5 @@ def test_authorized_login(auth, _response, logged_headers):
     )
 
 def test_unauthorized_login(auth, _response):
-    with pytest.raises(InvalidCredentials):
+    with pytest.raises(InvalidCredentialsError):
         auth.login('wrong-email', 'wrong-password')

@@ -4,7 +4,7 @@ from pytest import fixture, raises
 import responses
 from requests import Session
 
-from orlylearning.exceptions import InvalidSession
+from orlylearning.errors import InvalidSessionError
 from orlylearning.handler import AuthHandler
 
 @fixture(name='invalid_session_auth')
@@ -29,7 +29,7 @@ def test_invalid_logout(invalid_session_auth):
         AuthHandler.API_END_SESSION,
         status=HTTPStatus.FORBIDDEN.value
     )
-    with raises(InvalidSession):
+    with raises(InvalidSessionError):
         invalid_session_auth.logout()
 
 @responses.activate

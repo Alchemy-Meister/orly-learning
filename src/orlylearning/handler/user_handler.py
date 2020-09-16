@@ -1,3 +1,9 @@
+#! /usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2020 Alchemy-Meister
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from http import HTTPStatus
 import json
 import re
@@ -6,10 +12,12 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, SoupStrainer
 
+from orlylearning.errors import InvalidSessionError
+
 from ..constants.urls import Url
-from ..exceptions import InvalidSession
 
 from .abstract_handler import AbstractHandler
+
 
 class UserHandler(AbstractHandler):
 
@@ -27,7 +35,7 @@ class UserHandler(AbstractHandler):
             UserHandler.LEARNING_PROFILE, allow_redirects=False
         )
         if response.status_code != HTTPStatus.OK.value:
-            raise InvalidSession()
+            raise InvalidSessionError()
         scripts = BeautifulSoup(
             response.text, 'lxml', parse_only=SoupStrainer('head')
         ).find_all('script')

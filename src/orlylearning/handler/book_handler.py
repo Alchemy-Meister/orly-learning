@@ -1,11 +1,19 @@
+#! /usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2020 Alchemy-Meister
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from http import HTTPStatus
 from typing import Iterator, Sequence
 from urllib.parse import urljoin
 
+from orlylearning.errors import InvalidSessionError
+
 from ..constants.urls import Url
-from ..exceptions import InvalidSession
 
 from .abstract_handler import AbstractHandler
+
 
 class BookHandler(AbstractHandler):
 
@@ -17,9 +25,10 @@ class BookHandler(AbstractHandler):
 
         response = self.session.get(BookHandler.LEARNING_BOOK.format(book_id))
         if response.status_code == HTTPStatus.UNAUTHORIZED.value:
-            raise InvalidSession()
+            raise InvalidSessionError()
 
         return response.json()
+
 
     def get_chapters_info(self, book_id: str) -> Sequence[dict]:
         self._check_session()
@@ -32,10 +41,11 @@ class BookHandler(AbstractHandler):
             for chapter in page_chapters
         ]
 
+
     def __get_chapters(self, page_url: str) -> Iterator[list]:
         response = self.session.get(page_url)
         if response.status_code == HTTPStatus.UNAUTHORIZED.value:
-            raise InvalidSession()
+            raise InvalidSessionError()
 
         response = response.json()
 

@@ -1,3 +1,9 @@
+#! /usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2020 Alchemy-Meister
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from http import HTTPStatus
 from http.cookies import SimpleCookie
 from typing import Optional
@@ -6,17 +12,19 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from requests import Response, Session
 
-from ..constants.headers import Headers
-from ..constants.urls import Url
-from ..exceptions import (
+from orlylearning.errors import (
     EmailError,
-    InvalidCredentials,
-    MissingRegistrationFields,
+    InvalidCredentialsError,
+    MissingRegistrationFieldsError,
     PasswordError
 )
+
+from ..constants.headers import Headers
+from ..constants.urls import Url
 from ..typing.auth import RegistrationFields
 
 from .abstract_handler import AbstractHandler
+
 
 class AuthHandler(AbstractHandler):
 
@@ -48,11 +56,12 @@ class AuthHandler(AbstractHandler):
         )
 
         if login_post_response.status_code == HTTPStatus.BAD_REQUEST.value:
-            raise InvalidCredentials()
+            raise InvalidCredentialsError()
 
         self.__handle_broken_cookies(login_post_response)
 
         return self.session
+
 
     def logout(self):
         self._check_session()
@@ -62,11 +71,12 @@ class AuthHandler(AbstractHandler):
 
         return self.session
 
+
     def register(self, registration_fields: RegistrationFields):
 
         for compulsory_key in AuthHandler.__REGISTRATION_FIELDS:
             if compulsory_key not in registration_fields:
-                raise MissingRegistrationFields(
+                raise MissingRegistrationFieldsError(
                     compulsory_key, AuthHandler.__REGISTRATION_FIELDS
                 )
 
@@ -130,9 +140,11 @@ class AuthHandler(AbstractHandler):
 
         return self.session
 
+
     def set_proxy(self, proxy: dict):
         super().set_proxy(proxy)
         self.proxy = proxy
+
 
     def __handle_broken_cookies(self, response: Response):
         for cookie in response.raw.headers.getlist('Set-Cookie'):
@@ -143,6 +155,7 @@ class AuthHandler(AbstractHandler):
                     int(morsel['max-age'])
                 except ValueError:
                     self.session.cookies.set(key, morsel.value)
+
 
     def __initialize_session(self) -> Session:
         session = Session()

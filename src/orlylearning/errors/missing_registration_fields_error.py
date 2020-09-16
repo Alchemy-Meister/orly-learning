@@ -1,0 +1,15 @@
+#! /usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2020 Alchemy-Meister
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from .orlylearning_error import ORlyLearningError
+
+
+class MissingRegistrationFieldsError(ORlyLearningError):
+    def __init__(self, missing_field, compulsory_fields):
+        super().__init__(
+            f'missing {repr(missing_field)} registration field, '
+            f'the following fields are required: {compulsory_fields}'
+        )
